@@ -1,20 +1,132 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title>Conversor de Medidas</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <!-- Botones para alternar secciones -->
+  <ion-segment [(ngModel)]="seccionActiva">
+    <ion-segment-button value="distancia">
+      <ion-label>Distancia</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="peso">
+      <ion-label>Peso</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="temperatura">
+      <ion-label>Temperatura</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- Conversor de Distancia (con listas) -->
+  <ion-card *ngIf="seccionActiva === 'distancia'">
+    <ion-card-header>
+      <ion-card-title>Convertir Distancia</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label>Valor</ion-label>
+        <ion-input type="number" [(ngModel)]="distancia.valor"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Unidad de origen</ion-label>
+        <ion-select [(ngModel)]="distancia.origen">
+          <ion-select-option value="km">Kilómetros</ion-select-option>
+          <ion-select-option value="m">Metros</ion-select-option>
+          <ion-select-option value="cm">Centímetros</ion-select-option>
+          <ion-select-option value="mm">Milímetros</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label>Unidad destino</ion-label>
+        <ion-select [(ngModel)]="distancia.destino">
+          <ion-select-option value="km">Kilómetros</ion-select-option>
+          <ion-select-option value="m">Metros</ion-select-option>
+          <ion-select-option value="cm">Centímetros</ion-select-option>
+          <ion-select-option value="mm">Milímetros</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-button expand="full" (click)="convertirDistancia()">Convertir</ion-button>
+      <p>Resultado: {{ distancia.resultado }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Conversor de Peso (Usando Radio Buttons) -->
+  <ion-card *ngIf="seccionActiva === 'peso'">
+    <ion-card-header>
+      <ion-card-title>Convertir Peso</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label>Valor</ion-label>
+        <ion-input type="number" [(ngModel)]="peso.valor"></ion-input>
+      </ion-item>
+
+      <ion-label>Unidad de origen</ion-label>
+      <ion-radio-group [(ngModel)]="peso.origen">
+        <ion-list>
+          <ion-item><ion-label>Tonelada</ion-label><ion-radio slot="start" value="ton"></ion-radio></ion-item>
+          <ion-item><ion-label>Kilogramo</ion-label><ion-radio slot="start" value="kg"></ion-radio></ion-item>
+          <ion-item><ion-label>Libra</ion-label><ion-radio slot="start" value="lb"></ion-radio></ion-item>
+          <ion-item><ion-label>Gramo</ion-label><ion-radio slot="start" value="g"></ion-radio></ion-item>
+        </ion-list>
+      </ion-radio-group>
+
+      <ion-label>Unidad destino</ion-label>
+      <ion-radio-group [(ngModel)]="peso.destino">
+        <ion-list>
+          <ion-item><ion-label>Tonelada</ion-label><ion-radio slot="start" value="ton"></ion-radio></ion-item>
+          <ion-item><ion-label>Kilogramo</ion-label><ion-radio slot="start" value="kg"></ion-radio></ion-item>
+          <ion-item><ion-label>Libra</ion-label><ion-radio slot="start" value="lb"></ion-radio></ion-item>
+          <ion-item><ion-label>Gramo</ion-label><ion-radio slot="start" value="g"></ion-radio></ion-item>
+        </ion-list>
+      </ion-radio-group>
+
+      <ion-button expand="full" (click)="convertirPeso()">Convertir</ion-button>
+      <p>Resultado: {{ peso.resultado }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Conversor de Temperatura (Escala inicial con Lista, Convertir con Checkboxes) -->
+  <ion-card *ngIf="seccionActiva === 'temperatura'">
+    <ion-card-header>
+      <ion-card-title>Convertir Temperatura</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label>Valor</ion-label>
+        <ion-input type="number" [(ngModel)]="temperatura.valor"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Escala inicial</ion-label>
+        <ion-select [(ngModel)]="temperatura.origen">
+          <ion-select-option value="C">Celsius</ion-select-option>
+          <ion-select-option value="F">Fahrenheit</ion-select-option>
+          <ion-select-option value="K">Kelvin</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-label>Selecciona las escalas de conversión:</ion-label>
+      <ion-list>
+        <ion-item>
+          <ion-label>Celsius</ion-label>
+          <ion-checkbox [(ngModel)]="temperatura.celsius"></ion-checkbox>
+        </ion-item>
+        <ion-item>
+          <ion-label>Fahrenheit</ion-label>
+          <ion-checkbox [(ngModel)]="temperatura.fahrenheit"></ion-checkbox>
+        </ion-item>
+        <ion-item>
+          <ion-label>Kelvin</ion-label>
+          <ion-checkbox [(ngModel)]="temperatura.kelvin"></ion-checkbox>
+        </ion-item>
+      </ion-list>
+
+      <ion-button expand="full" (click)="convertirTemperatura()">Convertir</ion-button>
+      <p>Resultado: {{ temperatura.resultado }}</p>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>
